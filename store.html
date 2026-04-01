@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Nearby Store Finder</title>
+
+<style>
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#ffe6ef,#f5f7fb);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.container{
+background:white;
+padding:40px;
+border-radius:15px;
+width:560px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+input{
+width:80%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+button{
+margin-top:20px;
+padding:12px 25px;
+background:#ff6f9f;
+color:white;
+border:none;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff4f87;
+}
+
+#result{
+margin-top:20px;
+text-align:center;
+}
+
+.back{
+display:block;
+margin-top:20px;
+text-decoration:none;
+color:#ff6f9f;
+font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🛒 Smart Nearby Store Finder</h2>
+
+<p>Enter item you need</p>
+
+<input type="text" id="item" placeholder="lipstick, milk, charger">
+
+<br>
+
+<button onclick="findStore()">Find Nearby Stores</button>
+
+<div id="result"></div>
+
+<a href="/" class="back">⬅ Back to Dashboard</a>
+
+</div>
+
+<script>
+
+function findStore(){
+
+let item=document.getElementById("item").value.trim();
+
+if(!item){
+document.getElementById("result").innerHTML=
+"<p>Please enter an item.</p>";
+return;
+}
+
+document.getElementById("result").innerHTML=
+"<p>📍 Detecting your location...</p>";
+
+if(navigator.geolocation){
+
+navigator.geolocation.getCurrentPosition(function(pos){
+
+let lat=pos.coords.latitude;
+let lon=pos.coords.longitude;
+
+let mapURL=
+`https://www.google.com/maps/search/${item}/@${lat},${lon},15z`;
+
+document.getElementById("result").innerHTML=
+`
+<h3>🔎 Live Nearby Results</h3>
+<p>Click below to view real stores near you.</p>
+<a href="${mapURL}" target="_blank">
+<button>📍 Open in Google Maps</button>
+</a>
+`;
+
+},
+function(){
+document.getElementById("result").innerHTML=
+"<p>⚠ Location access denied. Please allow location.</p>";
+});
+
+}else{
+document.getElementById("result").innerHTML=
+"<p>Geolocation not supported.</p>";
+}
+
+}
+
+</script>
+
+</body>
+</html>

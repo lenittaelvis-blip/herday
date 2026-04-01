@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Recipe Generator</title>
+
+<style>
+body{
+  font-family:Arial;
+  background:linear-gradient(135deg,#ffe6ef,#f5f7fb);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.container{
+  background:white;
+  padding:50px;
+  border-radius:15px;
+  width:600px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  text-align:center;
+}
+
+input{
+  width:85%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:8px;
+  background:#ff6f9f;
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+button:hover{background:#ff4f87;}
+
+#result{margin-top:20px;text-align:left;}
+
+.step-btn{
+  background:#4CAF50;
+  margin-top:15px;
+}
+
+.step-btn:hover{
+  background:#45a049;
+}
+
+.progressBox{
+  width:100%;
+  background:#eee;
+  height:10px;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.progress{
+  width:0%;
+  height:10px;
+  background:#ff6f9f;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🍲 Smart Recipe Generator</h2>
+
+<input id="ingredients" placeholder="Enter ingredients (egg, milk, bread)">
+
+<button onclick="generateRecipe()">Generate Recipe</button>
+
+<div id="result"></div>
+
+<div class="progressBox">
+<div id="progress" class="progress"></div>
+</div>
+
+</div>
+
+<script>
+
+let currentStep = 0;
+let currentRecipeSteps = [];
+
+const emojis = ["🍳","🥗","🔥","🥄","🍲"];
+
+/* ---------- TITLE BEAUTIFIER ---------- */
+
+function beautifyTitle(title){
+
+title = title.toLowerCase();
+
+if(title.includes("maida") || title.includes("flour"))
+return "Soft Homemade Cake";
+
+if(title.includes("egg") && title.includes("bread"))
+return "Classic Omelette Sandwich";
+
+if(title.includes("rice"))
+return "Quick Veg Fried Rice";
+
+if(title.includes("milk"))
+return "Creamy Sweet Dessert";
+
+if(title.length > 25)
+return title.split(" ").slice(0,3).join(" ");
+
+return title.charAt(0).toUpperCase()+title.slice(1);
+}
+
+/* ---------- STEP FLOW ---------- */
+
+function showNextStep(){
+
+const resultDiv = document.getElementById("result");
+
+if(currentStep < currentRecipeSteps.length){
+
+let e = emojis[Math.floor(Math.random()*emojis.length)];
+
+resultDiv.innerHTML =
+`<p><b>${e} Step ${currentStep+1}:</b> ${currentRecipeSteps[currentStep]}</p>
+<button class="step-btn" onclick="showNextStep()">Next Step</button>`;
+
+let percent = ((currentStep+1)/currentRecipeSteps.length)*100;
+document.getElementById("progress").style.width = percent + "%";
+
+currentStep++;
+
+}else{
+
+resultDiv.innerHTML =
+`<h3>🎉 Recipe Completed!</h3>
+<button onclick="generateRecipe()">Cook Again</button>`;
+
+document.getElementById("progress").style.width = "100%";
+}
+
+}
+
+/* ---------- MAIN GENERATOR ---------- */
+
+async function generateRecipe(){
+
+currentStep = 0;
+document.getElementById("progress").style.width = "0%";
+
+const ingInput = document.getElementById("ingredients").value.trim().toLowerCase();
+const resultDiv = document.getElementById("result");
+
+if(!ingInput){
+resultDiv.innerHTML = "<p>Please enter ingredients.</p>";
+return;
+}
+
+resultDiv.innerHTML = "<p>Generating Smart Recipe...</p>";
+
+const prompt = `
+You are a smart cooking assistant.
+
+User ingredients: ${ingInput}
+
+Suggest one simple tasty recipe.
+
+Respond STRICTLY:
+
+Recipe Name:
+
+Missing Ingredients:
+- item
+- item
+
+Steps:
+1.
+2.
+3.
+`;
+
+try{
+
+const res = await fetch('/chat',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({message:prompt})
+});
+
+const data = await res.json();
+const text = data.reply || "";
+
+/* ---------- PARSE TITLE ---------- */
+
+const titleMatch = text.match(/Recipe Name:\s*(.*)/i) || text.match(/Recipe Name:\s*\n\s*(.*)/i);
+let title = "Smart Recipe";
+
+if(titleMatch && titleMatch[1].trim().length > 2){
+title = beautifyTitle(titleMatch[1].trim());
+}else{
+let firstLine = text.split("\n")[0];
+if(firstLine.length < 40){
+title = beautifyTitle(firstLine);
+}
+}
+
+/* ---------- PARSE STEPS ---------- */
+
+let stepPart = text.split(/Steps:/i)[1] || "";
+
+currentRecipeSteps = stepPart
+.split(/\n|\d+\./)
+.map(s=>s.trim())
+.filter(s=>s.length>5);
+
+if(currentRecipeSteps.length === 0){
+throw "Bad AI format";
+}
+
+/* ---------- PARSE MISSING INGREDIENTS ---------- */
+
+let missingList = ["Salt","Pepper"];
+
+let missingPart = text.split(/Missing Ingredients:/i)[1];
+
+if(missingPart){
+missingList = missingPart
+.split(/\n|-/)
+.map(s=>s.trim())
+.filter(s=>s.length>3)
+.slice(0,3);
+}
+
+/* ---------- DISPLAY ---------- */
+
+resultDiv.innerHTML =
+`<h3>${title}</h3>
+<p><b>Suggested Missing Ingredients:</b></p>
+<ul>${missingList.map(i=>`<li>${i}</li>`).join("")}</ul>
+<p>Total Steps: ${currentRecipeSteps.length}</p>
+<button class="step-btn" onclick="showNextStep()">Start Cooking</button>`;
+
+}catch{
+
+currentRecipeSteps = [
+"Heat oil",
+"Add vegetables",
+"Cook for 5 minutes",
+"Add salt and spices",
+"Serve hot"
+];
+
+resultDiv.innerHTML =
+`<h3>Quick Stir Fry</h3>
+<button class="step-btn" onclick="showNextStep()">Start Cooking</button>`;
+}
+
+}
+
+</script>
+
+</body>
+</html>

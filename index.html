@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HerDay 🌸 | Your Daily Support</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<!-- Splash Screen -->
+<div id="splash-screen">
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='herday-logo.png') }}" class="splash-logo">
+    </div>
+</div>
+
+<!-- Main Chat App -->
+<div class="chat-container" id="main-app" style="display: none;">
+
+<div class="main-layout">
+    <!-- LEFT SIDE : TILES -->
+    <div class="tiles-section">
+         
+
+        <div class="tiles">
+            <a href="/recipe" class="tile">🍲 Smart Recipe Generator</a>
+            <a href="/style" class="tile">🗓️ Simple Schedule Generator</a>
+            <a href="/period" class="tile">🌸 Period Tracker</a>
+            <a href="/health" class="tile">💪 Health Monitor</a>
+            <a href="/store" class="tile">🛒 Nearby Store Finder</a>
+            <a href="/exercise" class="tile">🏃 Exercise Manager</a>
+        </div>
+
+    </div>
+
+    <!-- RIGHT SIDE : CHAT -->
+    <div class="chat-section">
+
+        <!-- Header -->
+        <div class="chat-header">
+            <img src="{{ url_for('static', filename='herday-logo.png') }}" class="header-logo">
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+
+        <!-- Chat Messages -->
+        <div id="chat-box"></div>
+
+        <!-- Input Area -->
+    
+        <div class="input-area">
+    <input type="text" id="user-input" placeholder="Type here...">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+    </div>
+
+</div>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

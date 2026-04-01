@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smart Health Monitor</title>
+
+<style>
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#ffe6ef,#f5f7fb);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.container{
+background:white;
+padding:45px;
+border-radius:15px;
+width:520px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+input{
+width:80%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+button{
+margin-top:20px;
+padding:12px 25px;
+background:#ff6f9f;
+color:white;
+border:none;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff4f87;
+}
+
+#result{
+margin-top:25px;
+line-height:1.7;
+text-align:left;
+}
+
+.meter{
+height:14px;
+background:#eee;
+border-radius:10px;
+margin-top:10px;
+overflow:hidden;
+}
+
+.fill{
+height:14px;
+border-radius:10px;
+}
+
+a{
+display:block;
+margin-top:25px;
+text-decoration:none;
+color:#ff6f9f;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>💪 Smart Health Monitor</h2>
+
+<input type="number" id="height" placeholder="Height (cm)">
+<input type="number" id="weight" placeholder="Weight (kg)">
+<input type="number" id="age" placeholder="Age">
+
+<br>
+
+<button onclick="calculateHealth()">Check Health</button>
+
+<div id="result"></div>
+
+<a href="/">⬅ Back to Dashboard</a>
+
+</div>
+
+<script>
+
+function calculateHealth(){
+
+let height = parseFloat(document.getElementById("height").value);
+let weight = parseFloat(document.getElementById("weight").value);
+let age = parseInt(document.getElementById("age").value);
+let result = document.getElementById("result");
+
+if(!height || !weight || !age){
+result.innerHTML="Please fill all fields.";
+return;
+}
+
+// BMI
+let h = height/100;
+let bmi = (weight/(h*h)).toFixed(1);
+
+let category,color,advice,emoji,goal;
+
+if(bmi < 18.5){
+category="Underweight";
+color="#f39c12";
+advice="Increase calorie intake & include strength training.";
+emoji="⚠";
+goal="Weight Gain Recommended";
+}
+else if(bmi < 24.9){
+category="Normal";
+color="#27ae60";
+advice="Maintain your balanced lifestyle.";
+emoji="✅";
+goal="Maintain Weight";
+}
+else if(bmi < 29.9){
+category="Overweight";
+color="#e67e22";
+advice="Focus on cardio & portion control.";
+emoji="⚠";
+goal="Fat Loss Recommended";
+}
+else{
+category="Obese";
+color="#e74c3c";
+advice="Regular exercise & medical consultation advised.";
+emoji="❗";
+goal="Weight Loss Strongly Recommended";
+}
+
+// Meter width
+let percent = Math.min((bmi/40)*100,100);
+
+// Calories estimation
+let calories = Math.round(10*weight + 6.25*height - 5*age + 5);
+
+// Water intake
+let water = (weight * 0.033).toFixed(2);
+
+// Tips
+let tips = [
+"Small habits build strong health.",
+"Hydration boosts metabolism.",
+"Sleep improves recovery.",
+"Consistency gives long-term results."
+];
+
+let resultHTML = `
+<h3>Your Health Report ${emoji}</h3>
+
+<p><b>BMI:</b> ${bmi} 
+<span style="color:${color}">(${category})</span></p>
+
+<div class="meter">
+<div class="fill" style="width:${percent}%;background:${color}"></div>
+</div>
+
+<p><b>🎯 Health Goal:</b> ${goal}</p>
+
+<p><b>🔥 Estimated Daily Calories:</b> ${calories} kcal</p>
+
+<p><b>💧 Recommended Water Intake:</b> ${water} liters/day</p>
+
+<p><b>📌 Advice:</b> ${advice}</p>
+
+<p><b>💡 Tip:</b> ${tips[Math.floor(Math.random()*tips.length)]}</p>
+`;
+
+result.innerHTML = resultHTML;
+
+}
+
+</script>
+
+</body>
+</html>

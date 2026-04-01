@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Exercise Manager</title>
+
+<style>
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#ffe6ef,#f5f7fb);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.container{
+background:white;
+padding:40px;
+border-radius:15px;
+width:560px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+select{
+width:80%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+button{
+margin-top:20px;
+padding:12px 25px;
+background:#ff6f9f;
+color:white;
+border:none;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff4f87;
+}
+
+#result{
+margin-top:20px;
+text-align:left;
+line-height:1.8;
+}
+
+.completed{
+text-decoration:line-through;
+color:gray;
+}
+
+a{
+display:block;
+margin-top:20px;
+text-decoration:none;
+color:#ff6f9f;
+font-weight:bold;
+}
+.exercise{
+cursor:pointer;
+margin-bottom:6px;
+}
+
+.exercise a{
+font-size:12px;
+display:inline;
+margin-left:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🏃 Smart Exercise Manager</h2>
+
+<p>Select your goal</p>
+<select id="goal">
+<option value="">Choose goal</option>
+<option value="weightloss">Weight Loss</option>
+<option value="fitness">General Fitness</option>
+<option value="strength">Strength Training</option>
+<option value="fatburn">Fat Burn</option>
+<option value="flexibility">Flexibility</option>
+<option value="cardio">Home Cardio</option>
+</select>
+
+<p>Select workout duration</p>
+<select id="duration">
+<option value="15">15 minutes</option>
+<option value="30">30 minutes</option>
+<option value="45">45 minutes</option>
+</select>
+
+<button onclick="generateExercise()">Generate Plan</button>
+
+<div id="result"></div>
+
+<a href="/">⬅ Back to Dashboard</a>
+
+</div>
+
+<script>
+
+function generateExercise(){
+
+let goal = document.getElementById("goal").value;
+let duration = parseInt(document.getElementById("duration").value);
+
+if(!goal){
+document.getElementById("result").innerHTML="Please select a goal.";
+return;
+}
+
+let warmup=[], main=[], cooldown=[], calories=0;
+
+if(goal==="weightloss"){
+warmup=["Jumping Jacks"];
+main=["Running","Squats","Mountain Climbers"];
+cooldown=["Stretching"];
+calories=duration*6;
+}
+
+else if(goal==="fitness"){
+warmup=["Stretching"];
+main=["Pushups","Squats","Jogging"];
+cooldown=["Light Yoga"];
+calories=duration*5;
+}
+
+else if(goal==="strength"){
+warmup=["Arm Circles"];
+main=["Pushups","Squats","Lunges"];
+cooldown=["Stretching"];
+calories=duration*7;
+}
+
+else if(goal==="fatburn"){
+warmup=["High Knees"];
+main=["Burpees","Jump Squats","Plank"];
+cooldown=["Deep Breathing"];
+calories=duration*8;
+}
+
+else if(goal==="flexibility"){
+warmup=["Neck Rotation"];
+main=["Hamstring Stretch","Side Bends","Yoga Flow"];
+cooldown=["Meditation"];
+calories=duration*3;
+}
+
+else if(goal==="cardio"){
+warmup=["Spot Jog"];
+main=["Skipping","Butt Kicks","Fast Feet"];
+cooldown=["Slow Walk"];
+calories=duration*6.5;
+}
+
+function exHTML(name,link){
+return `<div class="exercise" onclick="markDone(this)">
+${name}
+<a href="${link}" target="_blank">▶ tutorial</a>
+</div>`;
+}
+
+let result="<h3>Your Workout Plan</h3>";
+
+result+="<p><b>🔥 Warm-up:</b></p>";
+warmup.forEach(e=>{
+result+=exHTML(e,"https://www.youtube.com/results?search_query="+e+"+exercise");
+});
+
+result+="<p><b>💪 Main Workout:</b></p>";
+main.forEach(e=>{
+result+=exHTML(e,"https://www.youtube.com/results?search_query="+e+"+exercise");
+});
+
+result+="<p><b>🧘 Cool Down:</b></p>";
+cooldown.forEach(e=>{
+result+=exHTML(e,"https://www.youtube.com/results?search_query="+e+"+exercise");
+});
+
+let tips=[
+"Maintain proper posture.",
+"Stay hydrated.",
+"Consistency beats intensity.",
+"Warm up before heavy exercise."
+];
+
+result+=`<p><b>🔥 Estimated Calories Burned:</b> ${Math.round(calories)} kcal</p>`;
+result+=`<p><b>💡 Tip:</b> ${tips[Math.floor(Math.random()*tips.length)]}</p>`;
+
+document.getElementById("result").innerHTML=result;
+}
+
+function markDone(el){
+el.classList.toggle("completed");
+}
+
+</script>
+
+</body>
+</html>

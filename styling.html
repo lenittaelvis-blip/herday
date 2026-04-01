@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smart Schedule Generator</title>
+
+<style>
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#ffe6ef,#f5f7fb);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.container{
+background:white;
+padding:40px;
+border-radius:15px;
+width:560px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+max-height:90vh;
+overflow:auto;
+}
+
+.task-row{
+display:flex;
+gap:6px;
+margin-top:10px;
+}
+
+.task-row input{
+flex:2;
+padding:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.task-row select{
+flex:1;
+padding:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.remove{
+background:#ff9aa2;
+padding:8px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+button{
+margin-top:15px;
+padding:10px 20px;
+background:#ff6f9f;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+}
+
+button:hover{
+background:#ff4f87;
+}
+
+.card{
+background:#f9f9f9;
+padding:10px;
+border-radius:10px;
+margin-top:8px;
+}
+
+.completed{
+text-decoration:line-through;
+color:gray;
+}
+
+a{
+display:block;
+margin-top:20px;
+text-decoration:none;
+color:#ff6f9f;
+font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>📅 Smart Schedule Generator</h2>
+
+<div id="taskContainer"></div>
+
+<button onclick="addTask()">➕ Add Task</button>
+
+<br>
+
+<input id="startTime" placeholder="Start time (e.g., 9)">
+
+<br>
+
+<button onclick="generateSchedule()">Generate Schedule</button>
+<button onclick="clearSchedule()">Clear</button>
+
+<div id="result"></div>
+
+<a href="/">⬅ Back to Dashboard</a>
+
+</div>
+
+<script>
+
+function addTask(){
+let container=document.getElementById("taskContainer");
+
+let div=document.createElement("div");
+div.className="task-row";
+
+div.innerHTML=`
+<input placeholder="Task name">
+<select>
+<option value="3">High</option>
+<option value="2">Medium</option>
+<option value="1">Low</option>
+</select>
+<select>
+<option value="1.5">1.5 hr</option>
+<option value="1">1 hr</option>
+<option value="0.5">30 min</option>
+</select>
+<button class="remove" onclick="this.parentElement.remove()">❌</button>
+`;
+
+container.appendChild(div);
+}
+
+function generateSchedule(){
+
+let rows=document.querySelectorAll(".task-row");
+let startTime=parseFloat(document.getElementById("startTime").value);
+
+if(rows.length===0||isNaN(startTime)){
+result.innerHTML="Please add tasks and valid start time.";
+return;
+}
+
+let tasks=[];
+
+rows.forEach(row=>{
+let name=row.children[0].value.trim();
+let priority=parseInt(row.children[1].value);
+let duration=parseFloat(row.children[2].value);
+
+if(name){
+tasks.push({name,priority,duration});
+}
+});
+
+tasks.sort((a,b)=>b.priority-a.priority);
+
+let time=startTime;
+let html="<h3>Your Smart Schedule</h3>";
+
+tasks.forEach(task=>{
+
+let start=time;
+let end=time+task.duration;
+
+html+=`
+<div class="card">
+<b>${formatTime(start)} - ${formatTime(end)}</b><br>
+<span onclick="markDone(this)">${task.name}</span>
+(${getPriority(task.priority)})
+</div>
+`;
+
+time=end;
+
+// break
+let breakTime=task.priority===3?0.5:0.25;
+
+html+=`
+<div class="card" style="color:green;">
+${formatTime(time)} - ${formatTime(time+breakTime)} → Break ☕
+</div>
+`;
+
+time+=breakTime;
+
+});
+
+html+=`<p><b>Total End Time:</b> ${formatTime(time)}</p>`;
+
+let tips=[
+"Start with hardest task first.",
+"Short breaks improve focus.",
+"Plan realistically.",
+"Consistency beats perfection."
+];
+
+html+=`<p><b>💡 Tip:</b> ${tips[Math.floor(Math.random()*tips.length)]}</p>`;
+
+result.innerHTML=html;
+window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+}
+
+function clearSchedule(){
+result.innerHTML="";
+}
+
+function markDone(el){
+el.classList.toggle("completed");
+}
+
+function formatTime(time){
+let hour=Math.floor(time);
+let min=(time%1)*60;
+
+let suffix=hour>=12?"PM":"AM";
+if(hour>12) hour-=12;
+if(hour===0) hour=12;
+
+return `${hour}:${min===0?"00":min} ${suffix}`;
+}
+
+function getPriority(p){
+if(p===3) return "High";
+if(p===2) return "Medium";
+return "Low";
+}
+
+addTask();
+
+</script>
+
+</body>
+</html>

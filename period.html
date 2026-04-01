@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Period Tracker</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:linear-gradient(135deg,#ffe6ef,#f5f7fb);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
+
+.container{
+background:white;
+padding:45px;
+border-radius:15px;
+width:500px;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+input{
+width:80%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+button{
+margin-top:20px;
+padding:12px 25px;
+background:#ff6f9f;
+color:white;
+border:none;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff4f87;
+}
+
+.result-card{
+margin-top:25px;
+padding:20px;
+border-radius:12px;
+background:#ffe6ef;
+text-align:left;
+}
+
+a{
+display:block;
+margin-top:25px;
+text-decoration:none;
+color:#ff6f9f;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🌸 Period Tracker</h2>
+
+<p>Enter first day of your last period</p>
+
+<input type="date" id="lastDate">
+
+<button onclick="predict()">Predict Next Cycle</button>
+
+<div id="result"></div>
+
+<a href="/">⬅ Back to Dashboard</a>
+
+</div>
+
+<script>
+
+function predict(){
+
+let date=document.getElementById("lastDate").value;
+let result=document.getElementById("result");
+
+if(!date){
+result.innerHTML="Please select a date.";
+return;
+}
+
+let last=new Date(date);
+let today=new Date();
+
+let next=new Date(last);
+next.setDate(next.getDate()+28);
+
+let fertileStart=new Date(last);
+fertileStart.setDate(fertileStart.getDate()+12);
+
+let fertileEnd=new Date(last);
+fertileEnd.setDate(fertileEnd.getDate()+16);
+
+let ovulation=new Date(last);
+ovulation.setDate(ovulation.getDate()+14);
+
+let daysLeft=Math.ceil((next - today)/(1000*60*60*24));
+
+let tips=[
+"Stay hydrated and maintain balanced nutrition.",
+"Light exercise can help reduce discomfort.",
+"Track symptoms regularly for better awareness.",
+"Ensure adequate sleep during cycle phases."
+];
+
+let html=`
+<div class="result-card">
+
+<h3>Prediction Result</h3>
+
+<p>🌸 <b>Next Period:</b> ${next.toDateString()}</p>
+
+<p>💗 <b>Fertile Window:</b> ${fertileStart.toDateString()} - ${fertileEnd.toDateString()}</p>
+
+<p>⭐ <b>Estimated Ovulation:</b> ${ovulation.toDateString()}</p>
+
+<p>⏳ <b>Days Remaining:</b> ${daysLeft} days</p>
+
+<p>💡 <b>Tip:</b> ${tips[Math.floor(Math.random()*tips.length)]}</p>
+
+</div>
+`;
+
+result.innerHTML=html;
+
+}
+
+</script>
+
+</body>
+</html>
