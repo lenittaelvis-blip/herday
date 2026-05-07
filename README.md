@@ -17,6 +17,7 @@ tracker, nearby store finder, and schedule generator.
 *  Basic Health Monitor
 *  Nearby Store Finder
 *  User login & registration
+*  Secure authentication using password hashing
 
 ---
 
