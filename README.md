@@ -39,9 +39,16 @@ tracker, nearby store finder, and schedule generator.
 
 ---
 
-## Screenshots
+## Sample screenshots
 
+* screenshots/chatbot.png
+* screenshots/homepage.png
+* screenshots/login.png
+* screenshots/nearby_store_finder.png
+* screenshots/period_tracker.png
+* screenshots/recipe_generator.png
 
+  ---
 
 ##  How to Run the Project
 
