@@ -50,12 +50,46 @@ tracker, nearby store finder, and schedule generator.
 
   ---
 
-##  How to Run the Project
+## How to Run the Project
 
-1. Clone the repository
-2. Install required Python packages
-3. Run `app.py`
-4. Open browser and go to `localhost`
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/lenittaelvis-blip/herday.git
+```
+
+### 2. Navigate to the project folder
+
+```bash
+cd herday
+```
+
+### 3. Install required dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Create a `.env` file
+
+Add the following environment variables:
+
+```env
+SECRET_KEY=your_secret_key_here
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+### 5. Run the Flask application
+
+```bash
+python app.py
+```
+
+### 6. Open the project in your browser
+
+```txt
+http://127.0.0.1:5000
+```
 
 ---
 
