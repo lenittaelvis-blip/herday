@@ -1,4 +1,4 @@
-# 🌸 HerDay – Your Planning Companion
+# HerDay – Your Planning Companion
 
 ##  About the Project
 
@@ -9,6 +9,7 @@ tracker, nearby store finder, and schedule generator.
 
 ##  Features
 
+*  Women centric AI Chatbot
 *  Period tracking
 *  Schedule generator
 *  Exercise manager
