@@ -41,12 +41,12 @@ tracker, nearby store finder, and schedule generator.
 
 ## Sample screenshots
 
-* screenshots/chatbot.png
-* screenshots/homepage.png
-* screenshots/login.png
-* screenshots/nearby_store_finder.png
-* screenshots/period_tracker.png
-* screenshots/recipe_generator.png
+* ![Chatbot](screenshots/chatbot.png)
+* ![Home Page](screenshots/homepage.png)
+* ![Login Page](screenshots/login.png)
+* ![Nearby store finder](screenshots/nearby_store_finder.png)
+* ![Period Tracker](screenshots/period_tracker.png)
+* ![Smart Recipe Generator](screenshots/recipe_generator.png)
 
   ---
 
